@@ -1136,6 +1136,42 @@
   tags: electronic-structure wavelets density-functional-theory
   license: custom
 
+- name: Metalwalls
+  gitlab: ampere2/metalwalls
+  description: molecular dynamics code dedicated to the modelling of electrochemical systems
+  categories: scientific
+  tags: molecular-dynamics electrochemistry
+  license: MIT
+
+- name: ABIN
+  github: PHOTOX/ABIN
+  description: Multipurpose ab initio MD program.
+  categories: scientific
+  tags: molecular-dynamics
+  license: GPL-3.0
+  version: none
+
+- name: BLOM
+  github: NorESMhub/BLOM
+  description: Bergen Layered Ocean Model
+  categories: scientific
+  tags:
+  version: none
+
+- name: CIME
+  github: ESMCI/cime
+  description: Common Infrastructure for Modeling the Earth
+  categories: scientific
+  tags:
+  license: BSD-3-Clause
+
+- name: CTSM
+  github: ESCOMP/CTSM
+  description: Community Terrestrial Systems Model
+  categories: scientific
+  tags: ecosystem climate hydrology land-surface-model
+  license: MIT
+
 # --- Examples / demos / templates ---
 
 - name: Fortran 2018 examples
