@@ -2,11 +2,171 @@
     "name": "j3-fortran/fortran_proposals",
     "issues": [
         {
+            "number": 204,
+            "user": "acikek",
+            "date": "2021-04-29 02:59:18+00:00",
+            "title": "Allow argument declarations of the same name as the parent non-recursive function or subroutine",
+            "text": "This seems like an oversight. Currently, this is considered a syntax error. Since, in non-recursive functions or subroutines, itself cannot be called, there is no reason to disallow this. Here is an example:\n! Non-recursive\nsubroutine example(example) ! Syntax error\n  implicit none\n  integer :: example\nend subroutine example",
+            "comments": [
+                {
+                    "user": "klausler",
+                    "date": "2021-04-29 17:26:47+00:00",
+                    "text": "subroutine example(example)\n  integer :: example\n  call foo(example)\nend subroutine\n\nWhich example gets passed?"
+                },
+                {
+                    "user": "acikek",
+                    "date": "2021-04-29 22:08:00+00:00",
+                    "text": "Looks like that's an oversight on my part. Nonetheless, the integer variable. If you were going to pass the subroutine as an argument, you wouldn't have one of the arguments for itself be named the same. As far as I'm aware, many languages allow this scope redefinition."
+                },
+                {
+                    "user": "acikek",
+                    "date": "2021-04-30 00:16:47+00:00",
+                    "text": "I don't like the idea anymore after you brought that to my attention, although I'd like this issue to stay open in case there's any more comments to address."
+                }
+            ]
+        },
+        {
+            "number": 203,
+            "user": "Beliavsky",
+            "date": "2021-04-12 22:24:30+00:00",
+            "title": "Allow procedure calls to be annotated with INTENTs? ",
+            "text": "Some languages, such as Python and Matlab/Octave, let you return multiple entities from a function, for example\nmean, sd = stats(x)\nIn Fortran you can use a subroutine to do this,\ncall stats(x,mean,sd)\nbut it is not clear from the calling code what the inputs and outputs are. I suggest that Fortran be extended to allow procedure calls to be annotated by the INTENTs of the procedure. Then you could write\ncall stats(in: x, out: mean, out: sd)\nto call\nsubroutine stats(x,mean,sd)\nreal, intent(in) :: x(:)\nreal, intent(out) :: mean,sd\n...\nend subroutine stats\n\nYou could only annotate with in: inout: or out: if the corresponding procedure argument had the same declaration. For subroutines with many arguments, I often write a comment saying what the outputs are, but assertions checked by the compiler would be better. Maybe annotating procedure calls could help the compiler better optimize the code, since it would know what variables are not changed by the procedure call.",
+            "comments": [
+                {
+                    "user": "klausler",
+                    "date": "2021-04-12 22:31:53+00:00",
+                    "text": "Why not use well-named keyword arguments?"
+                },
+                {
+                    "user": "nshaffer",
+                    "date": "2021-04-13 00:43:38+00:00",
+                    "text": "Why not use well-named keyword arguments?\n\nCalling library code. This would be really great for calling LAPACK for example, where most routines return results by overwriting inputs."
+                }
+            ]
+        },
+        {
+            "number": 202,
+            "user": "rouson",
+            "date": "2021-04-06 06:05:07+00:00",
+            "title": "A new category of standard features: experimental",
+            "text": "Motivation\nForall and do concurrent are commonly assumed to offer the potential for better performance than do loops, but both were ultimately found to have design problems that preclude important optimizations, notably parallelization, in important use cases.  Fortran 2018 declares forall obsolescent but attempts to improve upon do concurrent despite known  standard-conforming use cases that a compiler cannot safely, or even in principle, parallelize.  A proposal was submitted to J3 to address do concurrent parallelization, but the committee did not adopt the proposal, presumably because the proposal changes the semantics of existing, standard-conforming code.\nThe value that the committee places on not breaking existing codes makes a replacement feature attractive.  The problems found in forall and do concurrent suggest anticipating the likelihood that any replacement will need future revisions to ensure the desired aim even if those revisions break existing code.\nProposal\nAnnex B of the Fortran 2018 standard lists the first two categories of features enumerated below.  I propose to add the third:\n\nDeleted features were \"redundant and considered largely unused in Fortran 90 or 2008.\"\nObsolescent features are those which \"were redundant and for which better methods were available in Fortran 90.\"\nExperimental  features could change in a future standard in ways that are incompatible with the current standard.\n\nExperimental features that survive 2 or 3 standards without incompatible changes could be removed from the list of experimental features.\nUse Case\nAn experimental new feature designed to be very similar to do concurrent but with parallelizable semantics could minimize the work of the committee, the compiler developers, and the user community wishing to refactor codes to leverage the new feature.  Most importantly, with users forewarned, the committee could update experimental features in subsequent standards even if the updates break existing code.",
+            "comments": [
+                {
+                    "user": "certik",
+                    "date": "2021-04-06 16:09:30+00:00",
+                    "text": "I support this 100%, thank you Damian for opening it. I would go even further and suggest any bigger feature to go into experimental first, such as any feature that does not yet have a prior compiler implementation and hasn't been tested in code by the wider community. The \"do concurrent\" is a prime example. As we experiment with ways to efficiently parallelize on GPUs, there might be more additions (perhaps specifying array memory layout, or specifying where an array should live) that I would not like in the \"Main\", but would be great to have in \"Experimental\", so that we can experiment with it."
+                },
+                {
+                    "user": "FortranFan",
+                    "date": "2021-04-06 16:23:09+00:00",
+                    "text": "When it comes to DO PARALLEL or any such new facilities, my personal opinion is to lead R&D - thus Experimental - effort(s) to prototype the feature in some open-source compiler platform(s) such as LFortran and/or LLVM, and/or GCC/gfortran and converge on the optimal solution.  And then strive to standardize the features based on results and lessons learned.\nWith all due respect, I do not think a 3rd category in the standard is viable or even advisable."
+                },
+                {
+                    "user": "tskeith",
+                    "date": "2021-04-06 16:48:58+00:00",
+                    "text": "The Java standard has something similar, preview features: https://openjdk.java.net/jeps/12\n\nA preview feature is a new feature of the Java language, Java Virtual Machine, or Java SE API that is fully specified, fully implemented, and yet impermanent. It is available in a JDK feature release to provoke developer feedback based on real world use; this may lead to it becoming permanent in a future Java SE Platform.\n\nOf course, Java is not precisely comparable to Fortran because all new features are implemented before being standardized."
+                },
+                {
+                    "user": "everythingfunctional",
+                    "date": "2021-04-06 17:39:04+00:00",
+                    "text": "I am in favor of this idea. We beta test everything else in this industry, why not features of the language themselves. As @tskeith pointed out, there is some precedence for this in at least one other standardized language. Rust is another example of a language with this property (see their \"Unstable Features\"), even if it isn't standardized.\nBut I'm not sure this is either sufficient, or maybe even necessary to get what you actually want; for compiler writers to implement new features to be tested out before they get permanently etched into the standard. Compiler writers already have enough trouble keeping up with the new standards. I worry this may give them an excuse to put off implementing these features. On the whole I think it does put us in a better position though, because at least then we don't have to individually convince them to implement features that aren't in the standard."
+                },
+                {
+                    "user": "klausler",
+                    "date": "2021-04-06 18:19:48+00:00",
+                    "text": "I agree that the \"rank agnostic array addressing\" feature is a candidate for this category; it's a trainwreck, and its purpose could be more easily attained with far simpler language tweaks.  But that's its own discussion.\nHere's a problematic objection that will be raised to quash this idea: language features are usually interdependent, and often in subtle ways.  Adding a \"feature\" to the standard often involves edits to many clauses and new constraints in nonobvious places.  Some features, like coarrays, become pervasive throughout the document.\nSo, suppose one wants to add a feature in this new experimental category.  Where do you describe its interactions with all of the other aspects of the language?  You can't really just package up all of the necessary edits for a nontrivial feature into a \"patch\" that then becomes a subclause, but you really really can't distribute the changes over the rest of the document either.  This gets harder with experimental features that have unavoidable interactions with each other.\nI think this idea will get shot down quickly unless you guys have a good description of how experimental features would appear in an appendix (or whatever) and be able to address all of the interactions with the standard language and other experiments.  It may be that the descriptions of these features would be more useful if they remained outside the document entirely until proven (or not) in implementations.  You probably also want to be able to edit/fix/extend these descriptions at a much faster cadence than the committee process allows, too; more iterations will generate better results."
+                },
+                {
+                    "user": "rouson",
+                    "date": "2021-04-07 01:36:16+00:00",
+                    "text": "Thanks to all who have provided feedback so far.  My primary concern is that the committee's understandable reluctance to break existing codes and/or delete features leaves us stuck for long periods with a feature that is known to be broken (forall) or known to have significant problems that cannot be addressed without breaking existing codes (do concurrent).\n@everythingfunctional great point. The wide variability in implementation speeds makes me wonder whether the determining factor is something other than what's in the standard.  We have at least one Fortran 2018 compiler while there are several that aren't even 2008-compliant yet.  I don't think it's the standard itself that makes the key difference in implementation speed.\n@klausler I'm imagining that experimental features get integrated into the standard in the same way as any other feature.  The only change to the standard would be listing experimental features in Annex B as a way to signal that the committee will be willing to make changes that are incompatible with previous standards if it becomes clear that the feature has significant problems that need to be addressed."
+                }
+            ]
+        },
+        {
+            "number": 201,
+            "user": "zerothi",
+            "date": "2021-03-24 11:56:51+00:00",
+            "title": "Kind specification implicit from context",
+            "text": "Problem\nCurrently real are by definition floating point values. So when assigning constants to a double precision you'll get conversion losses\nprogram test\n  real(8), parameter :: const = 1.4435435345345\n  real(8), parameter :: const2 = 1./3.\n  real(8), parameter :: const3 = 1./4.\n\n  print *, const\n  print *, const2\n  print *, const3\n\nend program test\nthe output will be:\n   1.4435435533523560     \n  0.33333334326744080     \n  0.25000000000000000 \nto much surprise of some users.\nCurrent way\nUsers are forced to explicitly denote the important constants as proper kinds. I.e. simple integers or reals that are well defined may not be affected. The solution to the above would be:\n real(8), parameter :: const = 1.4435435345345_8\n  real(8), parameter :: const2 = 1./3._8\n  real(8), parameter :: const3 = 1./4.\nnote not all are needed.\nThis alters the output to:\n   1.4435435345345000     \n  0.33333333333333331     \n  0.25000000000000000     \nSuggestion\n\nWhen doing math that is stored in a certain floating or integer kind specification (LHS), it would be natural to bump up every constant written on the RHS to the equivalent kind specification.\nWhen doing any math that gets printed every constant written should be bumped up to the highest kind specification in the expression\n\nOne needs to distinguish the two situations.\nConsider this:\nprogram test\n real(8), parameter :: const = 1./3.\n print *, 1./3. * 4._8\nin both the above cases 1. and 3. should automatically be bumped to the kind=8 specification as noted in the parameter declaration and by use of one kind=8\nAnother benefit is that complicated inline math would be much easier to write without worrying about kind-specifications.\nNote that all of the same considerations of the above should apply to integer and complex data types.\nBreaking code\nI hardly think this would break codes in undesirable ways. In fact, what it would do is ensure correct handling in many codes since the kind specification is not necessary in many cases any more. So results may change, but I would argue that there are no cases where one wants to do less precision math (on purpose) and store in higher precision variables.",
+            "comments": [
+                {
+                    "user": "awehrfritz",
+                    "date": "2021-03-24 12:46:46+00:00",
+                    "text": "This is indeed one of the rather annoying and nasty surprises of Fortran's floating point handling. So, I for one would really appreciate a feature like this.\nI think the most irritating issue with the current behaviour is that\nreal(8), parameter :: const2 = 1./3.\nyields\n  0.33333334326744080\nAt first I would have thought that the value should just be truncated and zero-padded, but I do realise that this would be as wrong as the current value.\nA quite nice summary of these issues can be found here:\nhttps://www.fortran90.org/src/best-practices.html#floating-point-numbers\nhttps://www.fortran90.org/src/gotchas.html#floating-point-numbers-gotcha\nCurrently, the only reliable way I found to deal with this is via compiler flags, especially if one deals with codes that contain bits and pieces from various sources (as is the case with a lot of Fortran codes especially)."
+                },
+                {
+                    "user": "zerothi",
+                    "date": "2021-03-24 13:02:01+00:00",
+                    "text": "Currently, the only reliable way I found to deal with this is via compiler flags, especially if one deals with codes that contain bits and pieces from various sources (as is the case with a lot of Fortran codes especially).\n\nYes. That could be one existing approach. However, this would only work if your code is using a consistent precision all around. I.e. mixed precision codes would be difficult to handle through compiler flags, or it could have some performance issues at least. Having this built-in the standard would clarify and make a lot of things easier."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-24 21:14:31+00:00",
+                    "text": "One question is to get this into the standard, where I can see objections about \"backwards incompatibility\". However, this issue I think can be completely fixed by a compiler that would warn or refuse to compile your first example. I just created an issue for this in LFortran:\nhttps://gitlab.com/lfortran/lfortran/-/issues/305\nIn general I would like LFortran to have a mode that is \"pedantic\" and does not allow such code. Similar with \"implicit none\" if you forget to specify it, it will refuse to compile your code. That way it will force you to write correct code (that will correctly work with other compilers today), without needing to change the standard.\nI believe that is the easiest way to get these issues fixed in practice."
+                },
+                {
+                    "user": "zerothi",
+                    "date": "2021-03-25 07:42:01+00:00",
+                    "text": "One question is to get this into the standard, where I can see objections about \"backwards incompatibility\"....\n\nI sort of had this feeling that perhaps there could be some backwards incompatibility. However, I think that the backwards incompatibility is a \"random\" fluctuation of numbers (as shown in the prior example). You never know which numbers gets appended in double precision. Here the clarity is implicit.\n\nHowever, this issue I think can be completely fixed by a compiler that would warn or refuse to compile your first example. I just created an issue for this in LFortran:\n\nYeah, compiler flags for checking this would also be awesome -fpedantic-kind or something similar.  have just opened up a \"bug\" @ gfortran see here\n\n...\nI believe that is the easiest way to get these issues fixed in practice.\n\nYeah, you are probably right, but my feeling is that nobody does this by intent. And if so they can easily be explicit. I think this would save more code than it breaks, if it actually will break anything. :)"
+                },
+                {
+                    "user": "zerothi",
+                    "date": "2021-03-25 10:44:50+00:00",
+                    "text": "For gfortran -Wconversion and -Wconversion-extra could be used."
+                },
+                {
+                    "user": "FortranFan",
+                    "date": "2021-03-25 12:29:09+00:00",
+                    "text": "KIND inference implicitly from context can cause significant problems in terms of backward compatibility.\nThe issue is really is with the KIND of REAL (and INTEGER) literal constants and arguments and results of intrinsic subprograms.\nA proposal such as #78 will be a good approach for Fortran."
+                },
+                {
+                    "user": "zerothi",
+                    "date": "2021-03-25 12:34:18+00:00",
+                    "text": "KIND inference implicitly from context can cause significant problems in terms of backward compatibility.\n\nCould you give an example where this would cause significant problems? I have tried to think of one that is really a problem, but I can't come up with anything but \"unintended\" assignment as mentioned above."
+                },
+                {
+                    "user": "wclodius2",
+                    "date": "2021-04-07 20:40:47+00:00",
+                    "text": "Sometimes legacy codes have strict restrictions on backwards compatibility, i.e. results may have to be reproducible to the last bit. That will not be fulfilled if the precision of the expression in the following example changes\nREAL(DP), PARAMETER :: EXAMPLE = 1./3."
+                }
+            ]
+        },
+        {
+            "number": 200,
+            "user": "sigfig",
+            "date": "2021-03-20 10:45:17+00:00",
+            "title": "improve specification of non-constant array shape declarations and pdt initialization",
+            "text": "fortran as specified has some semantic gaps in the interpretation of the restricted scalar expressions used in procedure interfaces, the interpretation of automatic array declarations using the dimension attribute, and the interpretation of parameterized derived type initialization in type declarations. this seems to be a substantial conformance issue, gfortran ifort and cuda fortran all have noticeable differences in how these language features are interpreted. i've found a few cases in gfortran and ifort where fortran 2003 compliant code will cause crashes during compilation. this is especially noticeable when using type parameters, pdts with integer, len parameters are largely unusable in programs where they would otherwise provide a lot of benefit, due to incomplete implementations and lack of testing. recent specification changes are no help here, after reviewing the semantics in fortran 2018, i have no idea how to implement these features myself without ignoring most of the rules.\non the fortran language spec side i believe there's a straightforward remedy for making compliance feasible:\n\nsplit the roles of specification expressions, further constraining the expressions that can be used in \"shape expressions\"\nmerge all the existing rules for non-constant array shapes, coarray shapes, and integer, len type parameters into one section on resolving dynamic and assumed shapes\nintroduce an operational interpretation of dynamic shape expressions into the spec\n\npart 1 only entails removing the already unusable primaries, intrinisics, and inquiries from usage in shape expressions. part 2 is a spec simplification, no semantics are changed, they're just deduplicated and the intended interpretation is made more explicit, without adding any new concepts.\npart 3 is the substantial change, to be useful it requires a non-trivial amount of reinterpretation and the addition of many new rules.\nmy proposal to make this easy in both specification and implementation is to introduce just one new semantic construction that corresponds to an integer constraint interpretation of the scalar expressions used in procedure interfaces. this is opposed to the current imperative expression evaluation interpretation of the same syntax.\nthis addition would require adding a notion of a \"shape invariant\", a few different classes of shape invariants, and resolution rules distinct from expression evaluation.\nthat seems to be a much broader scope of changes than other proposals, but it does seem like a constraint interpretation fits a lot closer to the existing semantics of shape expressions in fortran. as a trivial example, a matmul interface:\nfunction f(x, y, z, l, r) result(o)\n  integer :: x, y, z\n  real, dimension(x, y) :: l\n  real, dimension(y, z) :: r\n  real, dimension(x, z) :: o\nend function f\nthe required shape validation checks could be evaluated from top to bottom, from bottom to top, or in parallel, with no meaningful differences. we don't really have expression reduction available here either, either the interface is satisfiable or it isn't, there are no intermediate states in which a subset of this interface could be meaningfully satisfiable. if we introduced data dependencies or inequalities, we would arrive at an ordering, but it won't necessarily be an ordering over a set of statements, or over expressions. any ordering induced by an interface is an arbitrary lattice over variable relations. these look a lot more like simultaneous constraints than sequential statements.\nthis reinterpretation has a substantial upside with respect to specification effort: pdt initialization constraints can always be transcluded into the constraint set of the interface that declares the type, no extra rules are needed. additionally, the admissable intrinsic functions and requirements on specification functions admit easy constraint propagation. on the implementation side, the consequences of this sort of change unquestionably adds complexity to a compiler. the material benefit for compiler projects is that pdts and statement expressions are no longer a murky area, and users can successfully write a parameterized matrix type without filing bug reports.\nthis presentation is eliding over many caveats you may be able to notice. i've drafted a proposal document that elaborates on the shape invariant representation, static semantics, and implementation strategies, but it's super long so i didn't want to bomb the proposals repo before getting initial feedback. fortran makes this approach mostly easy but it does throw in some quirks, let me know if any of you have better ideas.",
+            "comments": [
+                {
+                    "user": "sigfig",
+                    "date": "2021-03-21 02:09:30+00:00",
+                    "text": "after rereading this post seems a bit more ambiguous compared to my other notes, so to be explicit, this proposal would introduce constraints as a semantic concept only in the language specification, not a programming construct accessible to fortran programmers. constraints are only intended to highlight the complexity class of resolving dynamic array shapes in fortran, and to make it more obvious how to write a conforming compiler. adopting this proposal would only entail reorganizing and rewording the rules related to shape expressions in the spec."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-21 12:01:07+00:00",
+                    "text": "Thanks @sigfig for the proposal. Do you think a Fortran standard conformance testsuite (#57) would help here? It seems it would help at least identify the bugs in the compiler regarding some feature, such as array bounds checking in a subroutine interface, or the PDT. As well as to \"specify\" in detailed examples what it means to have a certain feature.\nThe other part of your proposal is to reorganize the Fortran standard document to make it easier to write a Fortran compiler."
+                },
+                {
+                    "user": "sigfig",
+                    "date": "2021-03-22 00:01:20+00:00",
+                    "text": "if i was implementing a new compiler i'd absolutely want a canonical test suite for this set of features. in fortran evaluating these shape expressions constitutes a pretty big chunk of the dynamic semantics regarding memory management, and implementing them requires adding a lot of state tracking inside of a compiler, so good test coverage is really important. i haven't tried to enumerate the cases i'd want supported as unit tests, but this seems a bit difficult. the generality of the expression class used, scoping, and interaction with other rules for derived types produces a pretty sprawling tree of cases to test and provide canonical interpretations for. gfortran has the most publicly available test cases for these features, there's about 50 of them, but their coverage is not even close to guaranteeing any of it works as specified.\nto make conformance really easy i'd go for property-based testing measured against a canonical interpreter. i've had success with this before for typed dsl projects, but i'm not sure if it's appropriate for fortran. to write the canonical interpreter for testing, the rules for shape expressions definitely need to be made more explicit than they are in fortran 2018. the constraint representation i'm proposing here achieves that (it's adapted from a previous dsl project of mine), but there are lots of other options if this proposal isn't ideal."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-22 02:18:31+00:00",
+                    "text": "Regarding the test suite, I think everybody agrees we need a lot more thorough compiler independent test suite for all Fortran features. That should be further discussed at #57.\nWe can keep discussing the other parts of your proposals here."
+                }
+            ]
+        },
+        {
             "number": 199,
             "user": "zjibben",
             "date": "2021-02-23 00:38:26+00:00",
             "title": " February/March 2021 J3 meeting",
-            "text": "@certik and I will use this issue to keep the community updated on the work of the J3 Committee at the February/March 2021 (virtual) meeting.\nThe agenda is here. The documents for this meeting are here.\nMonday 2/22/21\n\nIEEE report 21-114\n\nJoR:\n\n21-101: Similar to a paper removed in the last meeting, but with some parts removed. Straw vote: First set of edits: 10, remove feature: 11, undecided: 2.\n\nEdit:\n\n21-106 Passed unanimous consent.\n\nTuesday 2/23/21\nJoR:\n\n21-101: Passed, unanimous consent for alternative #2 edits to remove the feature.\n21-115r1: Straw 19/0/3/2 (a/b/c/undecided). Delayed for final version.\n21-117r1: Withdrawn to add intro material.\n\nData:\n\n21-110: Straw vote for section 2: 17/2/7 (for/against/undecided). Section 3: 11/1/14. Add select case: 21/1/3. Deferred until Monday.\n21-111: Withdrawn, no current action. We expect the feature to be discussed again in the future for 202y.\n\nHPC:\n\n21-103r2: Passed, unanimous consent\n\nInterp:\n\n21-113: Passed, unanimous consent\n\nEdit:\n\n21-108r1: Passed, unanimous consent\n\nMonday 3/1/21\n\n21-119: vote\n21-112r1: discuss\n20-151?\n\nTuesday 3/2/21",
+            "text": "@certik and I will use this issue to keep the community updated on the work of the J3 Committee at the February/March 2021 (virtual) meeting.\nThe agenda is here. The documents for this meeting are here.\nMonday 2/22/21\n\nIEEE report 21-114\n\nJoR:\n\n21-101: Similar to a paper removed in the last meeting, but with some parts removed. Straw vote: First set of edits: 10, remove feature: 11, undecided: 2.\n\nEdit:\n\n21-106 Passed unanimous consent.\n\nTuesday 2/23/21\nJoR:\n\n21-101: Passed, unanimous consent for alternative #2 edits to remove the feature.\n21-115r1: Straw 19/0/3/2 (a/b/c/undecided). Delayed for final version.\n21-117r1: Withdrawn to add intro material.\n\nData:\n\n21-110: Straw vote for section 2: 17/2/7 (for/against/undecided). Section 3: 11/1/14. Add select case: 21/1/3. Deferred until Monday.\n21-111: Withdrawn, no current action. We expect the feature to be discussed again in the future for 202y.\n\nHPC:\n\n21-103r2: Passed, unanimous consent\n\nInterp:\n\n21-113: Passed, unanimous consent\n\nEdit:\n\n21-108r1: Passed, unanimous consent\n\nMonday 3/1/21\nJoR:\n\n21-115r2: Passed as amended, unanimous consent.\n21-117r2: Passed as amended, 11 for / 1 against / 3 abstention.\n\nData:\n\n21-110r1: Passed, unanimous consent.\n21-120r1: Straw vote on stat argument (23 stat / 2 clamp / 0 undecided). Straw vote on behavior (12 crash / 8 clamp / 5 undecided). More discussion and vote Tuesday.\n\nTuesday 3/2/21\nJoR:\n\n21-122r2: Passed, unanimous consent.\n\nData:\n\n21-121: Passed, unanimous consent.\n21-120r2: Straw vote (10 stat arg / 5 clamp / 2 subroutine / 7 error / 0 undecided). Runoff (13 stat arg / 9 error). Passed as amended with stat argument option, 9 for / 4 against / 1 abstention.\n21-132: Passed as amended, unanimous consent.\n\nHPC:\n\n21-102r1: Passed as amended, unanimous consent.\n21-105r1: Passed, unanimous consent.\n21-119r1: Passed, unanimous consent.\n21-124: Passed, 11 for / 2 against / 1 abstention.\n\nInterp:\n\n21-123: Straw vote (21 recommended / 3 best / 2 alternative / 1 undecided). Passed with \"recommended\" amendment, unanimous consent.\n21-128r1: Straw vote (14 for attribute / 9 against attribute / 3 undecided). Passed, 6 for / 5 against / 3 abstentions.\n\nEdit:\n\n21-126r1: Passed, unanimous consent.\n21-127: Passed, unanimous consent.\n21-129: Passed, unanimous consent.\n\nEmeritus status:\n\n21-130: Passed as amended, unanimous consent.\n21-131: Passed as amended, unanimous consent.",
             "comments": [
                 {
                     "user": "certik",
@@ -43,7 +203,13 @@
             "date": "2021-02-10 01:39:36+00:00",
             "title": "Enable Polymorphic Outputs",
             "text": "Is there any change that could be made to the language to allow for polymorphic outputs (or outputs with polymorphic components) from pure procedures. As mentioned in #189, there are currently a couple of constraints that disallow this. This significantly conflicts with a functional programming style, as evidenced by a few of my open source libraries; namely erloff, parff, and jsonff. Nothing impure is done anywhere within those libraries, but large swaths of them cannot be marked as pure because of these constraints.\nAs has been explained to me, the primary reason those constraints exist is that at compile time it cannot be guaranteed that a polymorphic entity won't have a dynamic type with an impure final subroutine. It would seem to me that adding a purefinal attribute to a type, restricting a type and any extended types to having pure final subroutines would be a straightforward fix for this.\nDoes anyone else have any ideas? Would there be support for a paper? What are the chances we could get this into 202X, or would it have to wait til 202Y?",
-            "comments": []
+            "comments": [
+                {
+                    "user": "rouson",
+                    "date": "2021-03-30 20:54:06+00:00",
+                    "text": "Let's write a paper to demonstrate the use case and then submit the paper when the committee is considering new features for F202Y."
+                }
+            ]
         },
         {
             "number": 195,
@@ -86,6 +252,21 @@
                     "user": "everythingfunctional",
                     "date": "2021-02-10 00:14:59+00:00",
                     "text": "Since many on the mailing list seem to want to keep the third form, an option for a different name might be NEXT_SEPARATOR. I could also be convinced that the first two forms should be named TOKENIZE. But I'm also partly just trying to reserve the name SPLIT so I can write one with the interface that makes sense to me.\ninterface\n  pure function split(string, separators) result(strings)\n    type(varying_string), intent(in) :: string\n    type(varying_string), intent(in) :: separators(:)\n    type(varying_string), allocatable :: strings(:)\n  end function\nend interface"
+                },
+                {
+                    "user": "milancurcic",
+                    "date": "2021-03-12 20:00:36+00:00",
+                    "text": "This paper was taken over by @richardbleikamp and discussed at the meeting 223.\nTL;DR:\n\nFirst two forms are tentatively named TOKENIZE.\nThird form will be its own intrinsic and called SPLIT.\nTOKENIZE won't accept coarrays and coindexed objects as arguments.\nTOKENIZE and SPLIT will be simple subroutines.\n\nHere's the paper that passed."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-12 21:00:40+00:00",
+                    "text": "@milancurcic awesome, thanks for pushing this. Do you want to update your \"reference\" implementation with the few changes?"
+                },
+                {
+                    "user": "milancurcic",
+                    "date": "2021-03-12 21:15:08+00:00",
+                    "text": "I will, very soon, and still have yet to add tests and work out a kink in the SPLIT (old 3rd form) implementation. Once there, we'll submit a PR to stdlib."
                 }
             ]
         },
@@ -6089,6 +6270,16 @@
                     "user": "FortranFan",
                     "date": "2019-11-18 17:47:02+00:00",
                     "text": "@jacobwilliams wrote:\n\nI want to be able to define a function that behaves like, for example, the intrinsic SIZE function, where the kind of the output is specified by an optional input. Am I correct that this currently isn't possible? ..\n\nThe specific example with 'my_class_size' function above is not feasible since KINDs need to be known at compile time.  However, based on further description of the need, it may be possible to workaround it by designing the 'my_class' as a parameterized derived type.\nAnyways, the need \"I want to be able to define a function that behaves like, for example, the intrinsic SIZE function\" is yet another instance where the Fortran standard makes certain allowances for intrinsic procedures (generic like ABS, FINDLOC, etc; variadic like MAX, MIN) and intrinsic types that are inextensible, single-component like C_PTR, etc. but does not extend the same courtesy for user procedures and types\nThis really comes to 'bite' because the committee refuses to include certain intrinsic 'classes' (a la what other languages now already have e.g., C++ in STL with std::string, std::vector, std::variant) that are so badly needed in the language but then there is extreme recalcitrance to offer to coders all the tools and mechanisms they need to build their own such 'classes'."
+                },
+                {
+                    "user": "ivan-pi",
+                    "date": "2021-04-05 11:49:14+00:00",
+                    "text": "I have stumbled into this a few times already. The last time was in a discussion of extending the intrinsic character functions like verify and scan to a custom string type (see fortran-lang/stdlib#321).\nAllowing a mechanism to allow a kind attribute in functions would make it much more convenient to use custom derived types (floats, strings) or types supporting automatic differentation (see #95), by allowing to overload all the intrinsic functions which have such an optional kind argument.\nFor a specific example say I want to use a derived type designed to emulate quadruple precision (106 bits of significand) using two doubles (also known as double-double arithmetic) or potentially the more ambitious quad-double (unevaluated sum of 4 doubles):\n  type :: dd_real\n    real(dp) :: x, y = 0.0d0\n  end type\n\nTo allow easily porting code from double to double-double, I would like to overload the real(a [,kind]) function, to cast down to a standard real value (say for output):\npure function real(a,kind) result(y)\n  type(dd_real), intent(in) :: a\n  integer, kind, optional :: kind\n  real(kind=kind) :: y\n  block\n    intrinsic :: real\n    y = real(a%x,kind=kind)\n  end block\nend function\n\nIf no optional argument is present, then kind should resolve to the default type (and not a null pointer). Maybe this is something which could be pursued in connection to issue #22 (default value for optional arguments) and the related proposal #175. In that case, the default real kind could be set using\ninteger, kind, default(kind(1.0)) :: kind\n\nIs there any way to find out if any related proposals have been discussed previously, and if yes, why were they  rejected?\ncc @certik @milancurcic @wclodius2 @sblionel"
+                },
+                {
+                    "user": "sblionel",
+                    "date": "2021-04-06 14:03:23+00:00",
+                    "text": "@ivan-pi , I don't recall ever seeing a proposal along these lines. It's an interesting idea."
                 }
             ]
         },
@@ -7617,6 +7808,11 @@
                     "user": "vansnyder",
                     "date": "2020-05-09 19:43:05+00:00",
                     "text": "I proposed a general facility for parameterized modules in 2004. The J3 paper was 04-383r1. I think it does what Klausler asked for. It does what Magne Haveraaen asked for in Tokyo.\n04-383r1.pdf"
+                },
+                {
+                    "user": "klausler",
+                    "date": "2021-03-09 22:04:30+00:00",
+                    "text": "A variation on this idea seems attractive to me, so I'll jot it down here rather than forget it.\nFortran can support genericity with its current modules by using them as paradigms.  For example, to define a generic linked list container, one would first write a model implementation with a fairly empty derived type for the payload in each node.  This module would be compilable and testable, and would fully describe all of the requirements on the payload type.\nThen, to build a linked list of some specific type, one would reinstantiate the paradigmatic module with a type substitution.  The replacement type must support all of the interfaces published for the payload type in the paradigm, and this would be checked.\nSubstitution of types and parameters (or just their values) in paradigmatic modules would solve the most pressing use cases for generic programming that have been put forward, and would avoid a need for \"requirements\" or \"concepts\"."
                 }
             ]
         },
@@ -8030,6 +8226,11 @@
                     "user": "marshallward",
                     "date": "2020-02-28 02:35:16+00:00",
                     "text": "I would also like to add a rebuttal to point 1.  I don't consider this simply a matter of convenience.  I see it as a remedy to a real problem, which is that the default namelist output is not a namelist and is potentially unparseable.\nPerhaps it is considered a convenience simply because it can be avoided by a careful programmer who judiciously uses DELIM for every unit destined to produce a namelist.  But I do consider it a concern when two very simple commands:\nopen(5, file=some_path)\nwrite(5, nml=some_nml) my_data\n\nproduces a thing which is almost - but not quite - a namelist.  So in my mind, this is an important reason for changing the default behavior.\nAgain, I don't really know if there's any way to pass along these comments.  I suppose I'm just adding it here for the sake of discussion."
+                },
+                {
+                    "user": "klausler",
+                    "date": "2021-04-07 18:52:42+00:00",
+                    "text": "Suggestion: add a new OPEN/INQUIRE argument with a distinct name, say NAMELIST_DELIM=, that would be independent of DELIM= and allow you get what you want for a whole run with just one statement."
                 }
             ]
         },
@@ -8283,6 +8484,66 @@
                     "user": "certik",
                     "date": "2020-08-01 03:50:46+00:00",
                     "text": "@klausler I agree with you and I think the best we can do is to get a community / vendors consensus of what should be supported and document it. Most production Fortran codes that I have seen use macros in some form, and thus compilers must support them.\nThank you for taking the lead on that in the document you shared."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-05 05:07:57+00:00",
+                    "text": "Here is a permanent link to the preprocessor documentation:\nhttps://github.com/llvm/llvm-project/blob/8a07c4a10b23acf05c6aaca2800081df56f44f82/flang/docs/Preprocessing.md"
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-05 05:27:51+00:00",
+                    "text": "We are currently figuring out how to add preprocessor support for LFortran. I can see that in Flang it is integrated into the compiler. I don't know if it is feasible to pre-process ahead of time (de-coupled from the compiler) and keep line numbers consistent, this is also relevant:\n\nLast, if the preprocessor is not integrated into the Fortran compiler, new Fortran continuation line markers should be introduced into the final text.\n\nThat would be my preferable approach, but I assume the down side are worse error messages and possibly it is slower?"
+                },
+                {
+                    "user": "klausler",
+                    "date": "2021-03-05 16:37:27+00:00",
+                    "text": "In f18 the first phase of compilation is called prescanning.  It reads the original source file, and expands any INCLUDE or #include files, normalizes the source in many ways (preprocessing directives, macro expansion, line continuation, comment removal, space insertion for fixed form Hollerith, space removal / collapsing, case lowering, &c.) to construct a big contiguous string in memory.  This string is what the parser parses, and it makes parsing so much easier.  Each byte in that string can be mapped to its original source byte or macro expansion or whatever by means of an index data structure.  In the parser and semantics we just use const char * pointers to represent source locations in messages and the name strings of symbols, and those get mapped back to source locations for contextual error message reporting later."
+                },
+                {
+                    "user": "aradi",
+                    "date": "2021-03-11 08:42:55+00:00",
+                    "text": "I think, it would be much more important, that all compiler accept and process #line directives in the source code. Then people can use whatever pre-processor suits their purpose most. As long as the preprocessor emits those directives (as for example Fypp does if requested), the user would always get correct error messages."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-11 17:59:33+00:00",
+                    "text": "I think the #line directives only ensure the correct line is being reported, but if your pre-processor expands a macro, it changes the line itself, so the compiler will report an error on the expanded line that is not what the user sees before calling the pre-processor."
+                },
+                {
+                    "user": "aradi",
+                    "date": "2021-03-11 19:24:05+00:00",
+                    "text": "No, if the source file is around, the compiler will show the right line. You can test it yourself.\ntest.F90:\n#:def ASSERT(cond)\n  #:if defined(\"DEBUG\")\n  $:cond\n  #:endif\n#:enddef\n\nprogram test\n  implicit none\n\n  #! expression is incorrect to trigger compiler error\n  @:ASSERT(1 ?= 2)\n\nend program test\n\nExecuting\nfypp -n -DDEBUG test.F90 > test.f90; gfortran test.f90\n\nyou obtain the error message:\ntest.F90:11:3:\n\n   11 |   @:ASSERT(1 ?= 2)\n      |   1\nError: Invalid character in name at (1)"
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-11 20:14:37+00:00",
+                    "text": "My bad, you are right. The only issue will happen if there is a syntax error in the expanded ASSERT macro, wouldn't it? Like this:\n:ASSERT(1 ?= 2)@\n\nI would expect it to show an incorrect column number."
+                },
+                {
+                    "user": "aradi",
+                    "date": "2021-03-12 13:01:50+00:00",
+                    "text": "If the error occurs in the expanded text, the error message can be indeed confusing. E.g.\n#:def ASSERT(cond)\n  if (.invalid. ${cond}$) error stop \"Assert failed\"\n#:enddef\n\nprogram test\n  implicit none\n\n  @:ASSERT(1 == 2)\n\nend program test\n\nwith\nfypp -n  test.F90 > test.f90; gfortran test.f90\n\nresults in\ntest.F90:9:6:\n\n    9 |   @:ASSERT(1 == 2)\n      |      1\nError: Unknown operator \u2018invalid\u2019 at (1)\n\nIn this case, one would have to drop the line marker generation as with\nfypp test.F90 > test.f90; gfortran test.f90\n\nto obtain\ntest.f90:5:6:\n\n    5 |   if (.invalid. 1 == 2) error stop \"Assert failed\"\n      |      1\nError: Unknown operator \u2018invalid\u2019 at (1)\n\nBut, this is independent of, whether the pre-pocessor is external or built in into the compiler. Do you show the original line or the expanded line (or both), when the error occurs in an expanded code? Whichever strategy one goes for, it can be equally realized with built-in as well as with external pre-processors (provided they generate line marker directives and the compiler understands them)."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-12 15:09:25+00:00",
+                    "text": "@aradi I am glad you posted here, I think you are right. Indeed the compiler could now about the pre-processor, as a black box, and it could show errors either in the expanded form, or unexpanded form, and in each way it would show the correct line.\nHow would it know the line comes from a macro expansion? Well, I guess once it found the line with the error in the expanded form, it can compare the unexpanded line (from the #line directive) and if it differs, it can show both, i.e. the error can look something like this:\ntest.f90:5:6:\n\n    5 |   if (.invalid. 1 == 2) error stop \"Assert failed\"\n      |      1\nError: Unknown operator \u2018invalid\u2019 at (1)\n\ntest.F90:9:6:\n\n    9 |   @:ASSERT(1 == 2)\n      |      2\nNote: the line at (1) where the error happens came from a macro expansion at (2)\n\nIf the line does not differ, then it can simply show the unexpanded form, as that will be the one which users see in their files.\nI think this might be a very acceptable approach, with the advantage that we can use different pre-processors, such as fypp.\nSummary of the black box approach:\n\nCorrect line and column numbers in the expanded form\nCorrect line, but potentially incorrect column number in the unexpanded form\n\nI can still see some potential advantages of integrating the pre-processor more deeply with the compiler:\n\nPotentially faster (no need to write a new source file out and to parse #line directives)\nIt knows which macro got expanded to what, so clang for example gives you error messages almost as if macros were part of the language itself\nPart of the previous point is that it will give you correct column numbers in the unexpanded form\n\nBut the black box approach is not bad, and one can implement both."
+                },
+                {
+                    "user": "aradi",
+                    "date": "2021-03-12 15:25:00+00:00",
+                    "text": "@certik I fully agree. Yes, the column number will be incorrect in the unexpanded form. And yes, a tight integration can give even deeper insights. But that assumes the existence of a well defined (standardized) pre-processor language which all Fortran compilers implement and follow, and which covers all the pre-processing needs people may come up with. In the mean time, the line directives can serve as a \"bridging technology\", allowing the usage of custom pre-processors."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-12 15:43:17+00:00",
+                    "text": "I created an issue at https://gitlab.com/lfortran/lfortran/-/issues/281 to implement this in LFortran."
+                },
+                {
+                    "user": "klausler",
+                    "date": "2021-03-12 16:46:23+00:00",
+                    "text": "f18 -fsyntax-only ppdemo.f90\n./ppdemo.f90:2:10: error: Actual argument for 'x=' has bad type 'CHARACTER(1)'\n  print *, CALL(sin, 'abc')\n           ^^^^^^^^^^^^^^^^\n./header.h:1:1: in a macro defined here\n  #define CALL(f,x) f(x)\n  ^^\n./ppdemo.f90:1:1: included here\n  include \"header.h\"\n  ^^^^^^^^^^^^^^^^^^\nthat expanded to:\n  sin( 'abc')\n  ^\nf18: Semantic errors in ppdemo.f90\n\nI think that it's necessary to have an integrated preprocessing facility in the same part of the compiler that's handling INCLUDE statements, line continuation, case normalization, &c.  It's not hard to implement and it should be standardized."
                 }
             ]
         },
@@ -8970,6 +9231,21 @@
                     "user": "FortranFan",
                     "date": "2021-01-09 00:42:37+00:00",
                     "text": "Here's a variant of the previous case, this one involves the expr on the right-hand side to include a component of the variable on the LHS:\n! Unit Test #: Test-2.F2018-7.5.6\n! Author     : FortranFan\n! Reference  : https://j3-fortran.org/doc/year/18/18-007r1.pdf\n!\n! Description:\n! Section 7.5.6.3 When finalization occurs in above pdf\n! c.f. page 80 paragraph starting line 17:\n! When finalization occurs\n!\n\nmodule m\n   type :: t\n      character(len=12) :: name = \"default\"\n   contains\n      private\n      procedure, pass(lhs) :: add_t\n      procedure, pass(this) :: clone_t\n      generic, public :: operator(+) => add_t\n      generic, public :: clone => clone_t\n      final :: final_t\n   end type\n   interface t\n      module procedure construct_t\n   end interface\ncontains\n   function construct_t( name ) result(r)\n      character(len=*), intent(in), optional :: name\n      type(t) :: r\n      if ( present(name) ) r%name = name\n   end function\n   subroutine final_t( this )\n      type(t), intent(inout) :: this\n      print *, \"final_t: this%name = \", this%name\n      return\n   end subroutine\n   function add_t( lhs, rhs ) result(r)\n      class(t), intent(in) :: lhs\n      type(t), intent(in)  :: rhs\n      type(t) :: r\n      r%name = trim(lhs%name) // \"+\" // trim(rhs%name)\n   end function\n   function clone_t( this ) result(r)\n      class(t), intent(in) :: this\n      type(t) :: r\n      r%name = trim(this%name) // \"*\"\n   end function\n   subroutine sub()\n      type(t), allocatable :: foo\n      foo = t( name=\"constructor\" )\n      print *, \"1\"\n      foo%name = \"foo\"\n      foo = foo%clone()\n      print *, \"2\"\n      foo = foo + foo\n      print *, \"3\"\n   end subroutine\nend module\n   use m, only : sub\n   call sub()\nend\ngfortran program output is\n\n1\n2\n3\nfinal_t: this%name = foo*+foo*\n\nThe expected program output is\n\nfinal_t: this%name = constructor\n1\nfinal_t: this%name = foo\nfinal_t: this%name = foo*\n2\nfinal_t: this%name = foo*\nfinal_t: this%name = foo*+foo*\n3\nfinal_t: this%name = foo*+foo*"
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-10 20:24:17+00:00",
+                    "text": "There is now a project idea for Google Summer of Code (GSoC) 2021 for Fortran-lang to create such a testsuite:\nhttps://github.com/fortran-lang/fortran-lang.org/wiki/GSoC-2021-Project-ideas#standard-conformance-suite\nObviously it would initially be limited to what can be achieved over the summer and then the community can contribute more tests over time. If anyone knows about a student, please direct them to the page to apply."
+                },
+                {
+                    "user": "sigfig",
+                    "date": "2021-03-22 05:10:38+00:00",
+                    "text": "as @certik suggested in #200, scalar expressions used in array shape and pdt declarations should probably be included in any conformance test suite, as the related language features are not well supported in any compiler. providing tests for this sort of language feature is pretty tricky because implementations will necessarily include lots of branching depending on the contents of the expression and the surrounding context. sanity checking and codegen bugs can be hidden in eg support for \"specification functions\" that are very difficult to uncover with unit testing. property-based testing ala haskell's quickcheck is super helpful for this sort of thing, but that would make implementation of a test suite a lot more complicated. i really have no idea what the ideal approach for testing these features should be, but it seems important to include."
+                },
+                {
+                    "user": "certik",
+                    "date": "2021-03-22 16:26:02+00:00",
+                    "text": "I think for the array shapes and PDT we simply have to include lots of cases and try to get as many corner cases as we can included. Then as people report bugs in a specific compiler that is not caught by the test suite, we simply add the case in."
                 }
             ]
         },
@@ -9103,6 +9379,11 @@
                     "user": "milancurcic",
                     "date": "2020-05-05 22:13:06+00:00",
                     "text": "Do you guys have some sort of regular meeting / video chat? I would be happy to drop by to see how we could work together if you're interested.\n\n@wolfv Great, thank you, I appreciate your time! I sent an email."
+                },
+                {
+                    "user": "odiferousmint",
+                    "date": "2021-04-11 03:09:18+00:00",
+                    "text": "Just because no one has mentioned it yet: OCaml has a pretty great package manager too, called opam: https://opam.ocaml.org/ (https://github.com/ocaml/opam). In all fairness, I never built it from source, I just grab the binary, which is all you need to run opam. For the curious, on my current system ldd /usr/bin/opam prints:\n\tlinux-vdso.so.1 (0x00007ffddfc59000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f8c17e81000)\n\tlibglpk.so.40 => /lib/x86_64-linux-gnu/libglpk.so.40 (0x00007f8c17ba2000)\n\tlibbz2.so.1.0 => /lib/x86_64-linux-gnu/libbz2.so.1.0 (0x00007f8c17b8f000)\n\tlibz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f8c17b73000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f8c17a24000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f8c17a1e000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f8c17a01000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f8c1780f000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f8c1895f000)\n\tlibcolamd.so.2 => /lib/x86_64-linux-gnu/libcolamd.so.2 (0x00007f8c17806000)\n\tlibamd.so.2 => /lib/x86_64-linux-gnu/libamd.so.2 (0x00007f8c177fb000)\n\tlibltdl.so.7 => /lib/x86_64-linux-gnu/libltdl.so.7 (0x00007f8c177f0000)\n\tlibgmp.so.10 => /lib/x86_64-linux-gnu/libgmp.so.10 (0x00007f8c1776c000)\n\tlibsuitesparseconfig.so.5 => /lib/x86_64-linux-gnu/libsuitesparseconfig.so.5 (0x00007f8c17765000)\n\nThere is also a popular build system developed by Jane Street: https://opam.ocaml.org/packages/dune/."
                 }
             ]
         },
@@ -9257,6 +9538,11 @@
                     "user": "everythingfunctional",
                     "date": "2019-12-31 03:59:59+00:00",
                     "text": "@certik , each quantity is it's own type. So the expression 1.0d0.unit.METERS is of type Length_t. And thus, if you wanted an array of densities, you would define one like type(Density_t) :: densities(5). It's possible add and subtract quantities of the same type, multiple and divide a quantity by a scalar, and dividing quantities of the same type returns a double precision. Quantities of the same type can also be compared with the normal operators. Additionally, each of the functions to divide or multiply different quantities is implemented specifically to return the correct resulting quantity. I.e. (1.0d0.unit.METERS) / (1.0d0.unit.SECONDS) == (1.0d0.unit.METERS_PER_SECOND) is valid and true. Additionally, all of the procedures are elemental, so you can do matrix math as well.\nThere is clearly some run time cost associated with this approach (about 3x cost to multiply 2 numbers as shown by my tests). But I find that to be acceptable in most instances given the added safety and convenience it brings. And if you're doing really performance sensitive stuff, the internal values are stored in SI units and are public so you can mitigate the slow down even further if need be.\nWith full compile time checking I'm not sure you could make this valid and extensible with new units.\nlengths(1:3) = [1.0d0.units.METERS, 1.0d0.units.FEET, 1.0d0.units.MICROMETERS]\n\nBut it works perfectly with my library. And it's possible to add new units and even quantities without actually needing to make any changes to the original library. If you want to use furlongs per fortnite for speed in your code, you just need to define a conversion factor from meters and a symbol somewhere in your code and it will work just fine."
+                },
+                {
+                    "user": "magicmouse",
+                    "date": "2021-04-09 23:16:16+00:00",
+                    "text": "Mr. Snyder's specification has proved very useful, as of 2021 i am aware of various languages that fully support physical units of measure. At compile time only there is F# and Cambridge FORTRAN.  For a full implementation, including user defined units of measure, and carrying the exponents of the fundamental quantities at runtime, you have Frink language (www.frinklang.org), and Beads (www.beadslang.org).  Frink is the supreme king of Units. Beads is a general purpose graphical interactive language that emits web apps, etc., and includes a layout model and event management in the language."
                 }
             ]
         },
@@ -10541,6 +10827,11 @@
                     "user": "ivan-pi",
                     "date": "2021-01-18 01:15:58+00:00",
                     "text": "If the protected attribute is allowed for members of derived types as already under discussion in #16 and #156, the \"getter\" problem would be solved for many usage cases.\nI can still imagine instances where I would like to have something closer to the idea of Pythons @property decorator. An example of what I have in mind is something along the lines of\n\ntype :: matrix\n  real, allocatable :: A(:,:)\n  integer, property :: rows = size(matrix%A,1)  ! a read-only property\n  integer, property :: cols = size(matrix%A,2)   ! a read-only property\ncontains\n  procedure :: get_nrows  ! I would like to avoid having to write this function\nend type\n\ntype(matrix) :: mat \n\nmat%A = reshape([1,2,3,4],[2,2])\n\nprint *, A%rows, A%cols    ! prints:       2       2\n\nI am guessing this would conflict with the way some intrinsic functions work. The gfortran documentation says that size() will only return a meaningful result for an allocated array. On the other hand ifort appears to return 0 as the size of unallocated objects. In any case the idea is that the actual call to size() would be made when the member A%rows is referenced somewhere. It would probably make sense to limit the allowable property functions to pure intrinsic functions."
+                },
+                {
+                    "user": "acikek",
+                    "date": "2021-04-29 02:32:47+00:00",
+                    "text": "@ivan-pi to clarify, that property attribute would mean that the assigned value is an executable statement, yes? While I agree with you on that it would definitely only allow pure intrinsic functions, even within those constraints, it wouldn't allow for properties that call multiple statements.\nThis is dissimilar to Python's @property decorator. It seems that what you want is more alike to JavaScript's arrow syntax for defining functions (conveniently using the same => operator), which is a whole different ordeal. For getters and setters, personally, pointing to a contained function or subroutine such as in the original proposal makes more sense."
                 }
             ]
         },
@@ -10975,6 +11266,31 @@
                     "user": "everythingfunctional",
                     "date": "2019-12-27 20:09:28+00:00",
                     "text": "I ended up implementing my own version of the ISO_VARYING_STRING module for a couple of reasons. gfortran still hasn't implemented it, even though it's been in the standard for quite a while now (I don't know that any other compiler has either). I hadn't seen a particularly complete, well tested, or well written version. There are significant bugs in most implementations of allocatable characters, not the least of which is that you still can't put them in an array even if they weren't buggy.\nI was under the impression that since ISO_VARYING_STRING had been approved, it was the right way to move forward. If you use a standards compliant version, if anybody ever does actually implement it in the compiler, you won't have to change any of your code, the external library will just become unnecessary. I also thought that standard covered all of the intrinsic procedures accepting or returning characters, and any additional procedures that were truly necessary.\nGranted, not every string functionality one would want is included, but that's what libraries are for."
+                },
+                {
+                    "user": "ivan-pi",
+                    "date": "2021-04-10 11:34:50+00:00",
+                    "text": "Failing an intrinsic type, it would be good if we could establish an aux Fortran library for such things so that my String wrapper and your String wrapper are compatible.\n\nHey @tclune, we have tried to make something along these lines over at the stdlib repository. For the start we converged to a non-extensible string_type (similar to the iso_varying_string) that can be used easily in an array of strings and supports all of the intrinsic character functions (the definition of the type is in the file stdlib_string_type.f90).\nAs a second step, @awvwgk provided a demonstration of an abstract base class (ABC) for a string object, already demonstrating wrappers to ftlString and StringiFor based upon the ABC.\nSome discussions related to the (problems of the) ABC are in:\n\nfortran-lang/stdlib#69 (comment)\nfortran-lang/stdlib#334\n\nI don't think we can get much further than this within the scope of the current standard."
+                },
+                {
+                    "user": "ivan-pi",
+                    "date": "2021-04-27 18:05:50+00:00",
+                    "text": "I was under the impression that since ISO_VARYING_STRING had been approved, it was the right way to move forward. If you use a standards compliant version, if anybody ever does actually implement it in the compiler, you won't have to change any of your code, the external library will just become unnecessary.\n\nAs I understand, the ISO_VARYING_STRING was withdrawn, see https://www.iso.org/standard/6129.html. I'm not sure if dropping the ISO prefix would cause more or less confusion at this point."
+                },
+                {
+                    "user": "everythingfunctional",
+                    "date": "2021-04-27 18:45:32+00:00",
+                    "text": "I was under the impression that since ISO_VARYING_STRING had been approved, it was the right way to move forward. If you use a standards compliant version, if anybody ever does actually implement it in the compiler, you won't have to change any of your code, the external library will just become unnecessary.\n\nAs I understand, the ISO_VARYING_STRING was withdrawn, see https://www.iso.org/standard/6129.html. I'm not sure if dropping the ISO prefix would cause more or less confusion at this point.\n\nYes, it was withdrawn, but I didn't know that at the time. I'm still a fan of the specification, even if it isn't in the standard. IMO, it's proven itself to be quite useful."
+                },
+                {
+                    "user": "ivan-pi",
+                    "date": "2021-04-27 19:19:49+00:00",
+                    "text": "This would be great for a blog post, looking at the story of this module, and doing some comparisons with the string_type currently in stdlib."
+                },
+                {
+                    "user": "everythingfunctional",
+                    "date": "2021-04-27 20:55:36+00:00",
+                    "text": "That's a good suggestion. I've got lots going on, but hopefully I can get to it before too long."
                 }
             ]
         },

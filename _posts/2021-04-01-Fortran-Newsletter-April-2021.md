@@ -2,7 +2,7 @@
 layout: post
 title: "Fortran newsletter: April 2021"
 category: newsletter
-author: Sebastian Ehlert
+author: Sebastian Ehlert, Alexis Perry-Holby, Laurence Kedward, Milan Curcic, Ondřej Čertík
 ---
 
 Welcome to the April 2021 edition of the monthly Fortran newsletter.
@@ -87,6 +87,8 @@ Work in progress:
   Summarize build toolchain workflow and implied rules
 * [#363](https://github.com/fortran-lang/stdlib/pull/363) (WIP):
   Add sort to stdlib\_string\_type module
+* [#367](https://github.com/fortran-lang/stdlib/pull/367) (WIP):
+  Add Intel compiler workflow for OSX
 
 
 Please help improve stdlib by testing and reviewing these pull requests!
@@ -100,7 +102,7 @@ Please try it out and let us know how it works, if there are any issues, or if t
 
 Here's what's new in `fpm`:
 
-* [Alpha release version 0.1.4](https://github.com/fortran-lang/fpm/releases/tag/v0.1.4)
+* [Alpha release version 0.2.0](https://github.com/fortran-lang/fpm/releases/tag/v0.2.0)
 * [Fpm is now available on conda-forge](https://github.com/conda-forge/fpm-feedstock)
 * [#352](https://github.com/fortran-lang/fpm/pull/352):
   Hacky fix for the help test
@@ -127,8 +129,16 @@ Here's what's new in `fpm`:
   Add fpm description and reorganize the README intro
 * [#404](https://github.com/fortran-lang/fpm/pull/404):
   Correct join for null input
+* [#409](https://github.com/fortran-lang/fpm/pull/409):
+  Give Programs Access to Code in Subdirectories
 * [#414](https://github.com/fortran-lang/fpm/pull/414):
   Add few important links to README
+* [#412](https://github.com/fortran-lang/fpm/pull/412):
+  Duplicate module definitions
+* [#413](https://github.com/fortran-lang/fpm/pull/413):
+  Add: omp\_lib to intrinsic modules list
+* [#419](https://github.com/fortran-lang/fpm/pull/419):
+  Split workflow for Haskell and Fortran fpm
 
 Work in progress:
 
@@ -136,12 +146,10 @@ Work in progress:
   First feature-complete release of the Fortran implementation.
 * [#364](https://github.com/fortran-lang/fpm/pull/364) (WIP):
   Plugin alpha version
-* [#409](https://github.com/fortran-lang/fpm/pull/409) (WIP):
-  Give Programs Access to Code in Subdirectories
-* [#412](https://github.com/fortran-lang/fpm/pull/412) (WIP):
-  Duplicate module definitions
-* [#413](https://github.com/fortran-lang/fpm/pull/413) (WIP):
-  Add: omp\_lib to intrinsic modules list
+* [#420](https://github.com/fortran-lang/fpm/pull/420) (WIP):
+  Phase out Haskell fpm
+* [fpm-haskell](https://github.com/fortran-lang/fpm-haskell) (WIP):
+  Separate repository for the Haskell fpm version
 
 `fpm` is still in early development and we need as much help as we can get.
 Here's how you can help today:
@@ -225,6 +233,29 @@ Call notes will be sent to the _flang-dev_ email list and also recorded [here](h
 
 ### LFortran
 
+* LFortran is participating in GSoC under the NumFOCUS and Fortran-lang umbrella, if you are interested, please apply: [https://gitlab.com/lfortran/lfortran/-/wikis/GSoC-2021-Ideas](https://gitlab.com/lfortran/lfortran/-/wikis/GSoC-2021-Ideas)
+* 7 people contributed code in the last month:
+    [Gagandeep Singh](https://github.com/czgdp1807),
+    [Dominic Poerio](https://dompoer.io/),
+    [Himanshu Pandey](https://github.com/hp77-creator),
+    [Thirumalai Shaktivel](https://github.com/Thirumalai-Shaktivel),
+    [Scot Halverson](https://github.com/scothalverson),
+    [Rohit Goswami](https://rgoswami.me/),
+    [Ondřej Čertík](https://ondrejcertik.com/).
+* 114 Merge Requests were [merged](https://gitlab.com/lfortran/lfortran/-/merge_requests?scope=all&utf8=%E2%9C%93&state=merged) in the past month, highlights
+    * macOS support (both Intel and ARM), compilation and development of
+      LFortran itself (stacktraces work also)
+    * Initial implentation of: modules (modfiles, dependencies, ...),
+      interfaces, integer/real kinds, public/private attribute, derived types,
+      strings, variable initializations, pointers, modules
+    * Many other fixes
+
+LFortran is still in pre-alpha stage, but we are making rapid progress towards
+getting it to compile more Fortran features. We are looking for contributors,
+if you are interested, please get in touch and we will help you get started.
+We can be contacted at Zulip Chat, mailinglist or GitLab issues (see
+https://lfortran.org for links to all three).
+
 ## Events
 
 * We had our 10th Fortran Monthly call on March 24.
@@ -234,6 +265,23 @@ You can watch the recording below:
 
 * This year Fortran-lang is a mentor organization for [Google Summer of Code](https://summerofcode.withgoogle.com/organizations/6633903353233408/).
 If you're a student, or know students who are [eligible to participate](https://developers.google.com/open-source/gsoc/faq#what_are_the_eligibility_requirements_for_participation), and you'd like to help build the Fortran ecosystem please reach out and let us know.
+The student application window opened on March 29 and will close on April 13 at 14:00 Eastern Time.
+
+* The 223rd meeting of the US Fortran Standards Committee concluded on March 2.
+  Main topics of dicussion were the planned changes for the Fortran 202X revision of the Standard.
+  Here's the [list of all submitted papers](https://j3-fortran.org/doc/meeting/223),
+  and the [summary](https://github.com/j3-fortran/fortran_proposals/issues/199)
+  of the papers discussed and voting results.
+  The committee also welcomed a new member, Milan Curcic ([@milancurcic](https://github.com/milancurcic)),
+  who is the voting alternate to Gary Klimowicz ([@gklimowicz](https://github.com/gklimowicz)).
+
+  If you have ideas for new improvements to the language, please propose them
+  [here](https://github.com/j3-fortran/fortran_proposals).
+
+* Registration is open for the upcoming free webinar on
+  [Fortran for High Performance Computing](https://register.gotowebinar.com/register/7343048137688004108).
+  The webinar is organized by [Excellerat](https://www.excellerat.eu/)
+  and will be presented by Wadud Miah ([@wadudmiah](https://github.com/wadudmiah)) from the University of Southampton.
 
 As usual, subscribe to the [mailing list](https://groups.io/g/fortran-lang) and/or
 join the [Discourse](https://fortran-lang.discourse.group) to stay tuned with the future meetings.
@@ -248,9 +296,10 @@ commenting in any of these repositories:
 * [fortran-lang/fpm](https://github.com/fortran-lang/fpm)
 * [fortran-lang/fpm-registry](https://github.com/fortran-lang/fpm-registry)
 * [fortran-lang/setup-fpm](https://github.com/fortran-lang/setup-fpm)
+* [fortran-lang/fpm-haskell](https://github.com/fortran-lang/fpm-haskell)
 * [fortran-lang/fortran-lang.org](https://github.com/fortran-lang/fortran-lang.org)
 * [fortran-lang/benchmarks](https://github.com/fortran-lang/benchmarks)
 * [fortran-lang/fortran-forum-article-template](https://github.com/fortran-lang/fortran-forum-article-template)
 * [j3-fortran/fortran\_proposals](https://github.com/j3-fortran/fortran_proposals)
 
-<div id="gh-contributors" data-startdate="March 01 2021" data-enddate="April 30 2021" height="500px"></div>
+<div id="gh-contributors" data-startdate="March 01 2021" data-enddate="March 31 2021" height="500px"></div>
