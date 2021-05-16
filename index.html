@@ -1,0 +1,381 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home &#8212; Fortran Programming Language</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/hide_h1.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/hide_h1.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/hide_h1.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="canonical" href="https://awvwgk.github.io/fortran-lang.org/index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Learn" href="learn.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+      
+      <link rel="icon" sizes="" href="_static/images/favicon.ico">
+      
+      
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="#">
+  <img src="_static/fortran-logo-256x256.png" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="learn.html">
+  Learn
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="compilers.html">
+  Compilers
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="community.html">
+  Community
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="packages.html">
+  Packages
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="news.html">
+  News
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://fortran-lang.discourse.group/" rel="noopener" target="_blank" title="Discourse">
+            <span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/fortranlang" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/fortran-lang" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://fortran-lang.org/news.xml" rel="noopener" target="_blank" title="RSS">
+            <span><i class="fas fa-rss"></i></span>
+            <label class="sr-only">RSS</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <div class="col-12 col-md-1 col-xl-2 bd-sidebar no-sidebar"></div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-11 col-xl-8 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                 <div class="section" id="home">
+<h1>Home<a class="headerlink" href="#home" title="Permalink to this headline">¶</a></h1>
+<div class="sphinx-bs container-lg pb-3 docutils">
+<div class="row docutils">
+<div class="d-flex col-lg-4 p-1 text-center no-shadow border-0 col-lg-12 docutils">
+<div class="card w-100 border-0 font-weight-bolder h1 docutils">
+<div class="card-body docutils">
+<p class="card-text">High-Performance parallel programming language</p>
+</div>
+</div>
+</div>
+<div class="d-flex col-lg-4 p-1 text-center no-shadow border-0 docutils">
+<div class="card w-100 border-0 docutils">
+<div class="card-body docutils">
+</div>
+</div>
+</div>
+<div class="d-flex col-lg-4 p-1 text-center no-shadow border-0 docutils">
+<div class="card w-100 shadow bg-primary docutils">
+<div class="card-body docutils">
+<p class="card-text"><a class="sphinx-bs btn text-wrap text-white stretched-link font-weight-bold reference external" href="learn.html"><span>Get Started</span></a></p>
+</div>
+</div>
+</div>
+<div class="d-flex col-lg-4 p-1 text-center no-shadow border-0 docutils">
+<div class="card w-100 border-0 docutils">
+<div class="card-body docutils">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="sphinx-bs container pb-4 docutils">
+<div class="row docutils">
+<div class="d-flex col-sm-8 p-0 docutils">
+<div class="card w-100 no-shadow border-0 docutils">
+<div class="card-header bg-white border-0 font-weight-bolder h3 docutils">
+<p class="card-text">Features</p>
+</div>
+<div class="card-body docutils">
+<p class="rubric">High performance</p>
+<p class="card-text">Fortran has been designed from the ground-up for computationally intensive applications in science and engineering.
+Mature and battle-tested compilers and libraries allow you to write code that runs close to the metal, fast.</p>
+<p class="rubric">Statically and strongly typed</p>
+<p class="card-text">Fortran is statically and strongly typed, which allows the compiler to catch many programming errors early on for you.
+This also allows the compiler to generate efficient binary code.</p>
+<p class="rubric">Easy to learn and use</p>
+<p class="card-text">Fortran is a relatively small language that is surprisingly easy to learn and use.
+Expressing most mathematical and arithmetic operations over large arrays is as simple as writing them as equations on a whiteboard.</p>
+<p class="rubric">Versatile</p>
+<p class="card-text">Fortran allows you to write code in a style that best fits your problem: Imperative, procedural, array-oriented, object-oriented, or functional.</p>
+<p class="rubric">Natively parallel</p>
+<p class="card-text">Fortran is a natively parallel programming language with intuitive array-like syntax to communicate data between CPUs.
+You can run almost the same code on a single CPU, on a shared-memory multicore system, or on a distributed-memory HPC or cloud-based system.
+Coarrays, teams, events, and collective subroutines allow you to express different parallel programming patterns that best fit your problem at hand.</p>
+</div>
+</div>
+</div>
+<div class="d-flex col-sm-4 p-0 docutils">
+<div class="card w-100 no-shadow border-0 docutils">
+<div class="card-header bg-white border-0 font-weight-bolder h3 docutils">
+<p class="card-text"><span class="fa fa-newspaper"></span>
+News</p>
+</div>
+<div class="card-body docutils">
+<ul class="postlist-style-none postlist simple">
+<li><p>2021-04-20 - <a class="reference internal" href="_posts/2021/04-20-First-Year.html">First year of the Fortran website</a></p></li>
+<li><p>2021-04-01 - <a class="reference internal" href="_posts/2021/04-01-Fortran-Newsletter-April-2021.html">Fortran newsletter: April 2021</a></p></li>
+<li><p>2021-03-09 - <a class="reference internal" href="_posts/2021/03-09-fortran-lang-accepted-for-google-summer-of-code-2021.html">Fortran-lang accepted to Google Summer of Code 2021</a></p></li>
+<li><p>2021-03-01 - <a class="reference internal" href="_posts/2021/03-01-Fortran-Newsletter-March-2021.html">Fortran newsletter: March 2021</a></p></li>
+<li><p>2021-02-01 - <a class="reference internal" href="_posts/2021/02-01-Fortran-Newsletter-February-2021.html">Fortran newsletter: February 2021</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sphinx-bs container pb-4 docutils">
+<div class="row docutils">
+<div class="d-flex col-sm-8 p-0 docutils">
+<div class="card w-100 no-shadow border-0 bg-light docutils">
+<div class="card-header bg-light border-0 font-weight-bolder h3 docutils">
+<p class="card-text">FAQ</p>
+</div>
+<div class="card-body docutils">
+<p class="rubric">What is the status of Fortran?</p>
+<p class="card-text">Fortran is still in active development.
+The latest revision of the language is <a class="reference external" href="https://isotc.iso.org/livelink/livelink?func=ll&amp;objId=19441669&amp;objAction=Open">Fortran 2018</a>, and the next one, with the working title Fortran 202x, is planned for release in the next few years.
+Further, open source projects like the <a class="reference external" href="https://github.com/fortran-lang/stdlib">Standard Library</a> and the <a class="reference external" href="https://github.com/fortran-lang/fpm">Fortran Package Manager</a> are in active development.</p>
+<p class="rubric">What is Fortran used for?</p>
+<p class="card-text">Fortran is mostly used in domains that adopted computation early—science and engineering.
+These include numerical weather and ocean prediction, computational fluid dynamics, applied math, statistics, and finance.
+Fortran is the dominant language of High Performance Computing, and is used to <a class="reference external" href="https://top500.org/">benchmark the fastest supercomputers in the world</a>.</p>
+<p class="rubric">Should I use Fortran for my new project?</p>
+<p class="card-text">If you’re writing a program or a library to perform fast arithmetic computation over large numeric arrays, Fortran is the optimal tool for the job.</p>
+</div>
+</div>
+</div>
+<div class="d-flex col-sm-4 p-0 docutils">
+<div class="card w-100 no-shadow border-0 bg-light docutils">
+<div class="card-body docutils">
+<p class="rubric"><span class="fa fa-envelope-open-text"></span>
+Mailing List</p>
+<p class="card-text">Subscribe to our <a class="reference external" href="https://groups.io/g/fortran-lang">mailing list</a> to discuss anything Fortran related, announce Fortran projects, discuss development of core fortran-lang.org projects (stdlib, fpm), and get the latest news.</p>
+<p class="rubric"><span class="fab fa-discourse"></span>
+Discourse</p>
+<p class="card-text">Join the discussion about all things Fortran on the <a class="reference external" href="https://fortran-lang.discourse.group/">fortran-lang discourse</a>.</p>
+<p class="rubric"><span class="fab fa-twitter"></span>
+Twitter</p>
+<p class="card-text"><a class="reference external" href="https://twitter.com/fortranlang">&#64;fortranlang</a></p>
+<p class="rubric"><span class="fa fa-rss"></span>
+RSS feed</p>
+<p class="card-text">RSS clients can follow the <a class="reference external" href="news.xml">RSS feed</a>.</p>
+<p class="rubric"><span class="fab fa-github"></span>
+Open source</p>
+<p class="card-text">Contribute code, report bugs and request features at <a class="reference external" href="https://github.com/fortran-lang">GitHub</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sphinx-bs container pb-4 docutils">
+<div class="row docutils">
+<div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 p-2 docutils">
+<div class="card w-100 no-shadow border-0 docutils">
+<div class="card-body docutils">
+<p class="rubric">Write proposals</p>
+<p class="card-text">Have an idea about how to improve the language?
+You can write new proposals or contribute to existing proposals to the Fortran Standard Committee on <a class="reference external" href="https://github.com/j3-fortran/fortran_proposals">GitHub</a>.</p>
+</div>
+</div>
+</div>
+<div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 p-2 docutils">
+<div class="card w-100 no-shadow border-0 docutils">
+<div class="card-body docutils">
+<p class="rubric">Develop tools</p>
+<p class="card-text">You can also help make Fortran better by contributing to its suite of tools, such as <a class="reference external" href="https://github.com/fortran-lang/stdlib">Standard Library</a>, <a class="reference external" href="https://github.com/fortran-lang/fpm">Package Manager</a>, or <a class="reference external" href="https://github.com/fortran-lang/fortran-lang.org">this website</a>.</p>
+</div>
+</div>
+</div>
+<div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 p-2 docutils">
+<div class="card w-100 no-shadow border-0 docutils">
+<div class="card-body docutils">
+<p class="rubric">Write Fortran software</p>
+<p class="card-text">Or just write Fortran software for your research, business, or schoolwork. You can learn how to get started <a class="reference external" href="learn/index.html">here</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+   
+</div>
+
+              </div>
+              
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright .<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

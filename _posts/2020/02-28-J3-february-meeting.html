@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>J3 February 2020 Meeting &#8212; Fortran Programming Language</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="canonical" href="https://awvwgk.github.io/fortran-lang.org/_posts/2020/02-28-J3-february-meeting.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+      
+      <link rel="icon" sizes="" href="../../_static/images/favicon.ico">
+      
+      
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/fortran-logo-256x256.png" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../learn.html">
+  Learn
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../compilers.html">
+  Compilers
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../community.html">
+  Community
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../packages.html">
+  Packages
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../news.html">
+  News
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://fortran-lang.discourse.group/" rel="noopener" target="_blank" title="Discourse">
+            <span><i class="fab fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/fortranlang" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/fortran-lang" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://fortran-lang.org/news.xml" rel="noopener" target="_blank" title="RSS">
+            <span><i class="fas fa-rss"></i></span>
+            <label class="sr-only">RSS</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                 <div class="section" id="j3-february-2020-meeting">
+<h1>J3 February 2020 Meeting<a class="headerlink" href="#j3-february-2020-meeting" title="Permalink to this headline">¶</a></h1>
+<p>The J3 Fortran Committee meeting took place in Las Vegas, NV, on February 24-28,
+2020.</p>
+<div class="section" id="attendance">
+<h2>Attendance<a class="headerlink" href="#attendance" title="Permalink to this headline">¶</a></h2>
+<p>The following people / companies attended:</p>
+<p>Voting members:</p>
+<ol class="simple">
+<li><p>Intel: Jon Steidel</p></li>
+<li><p>HPE/Cray: Bill Long</p></li>
+<li><p>NVIDIA: Peter Klausler, Gary Klimowicz</p></li>
+<li><p>IBM: Daniel Chen</p></li>
+<li><p>ARM: Srinath Vadlamani</p></li>
+<li><p>NCAR: Dan Nagle, Magne Haveraaen</p></li>
+<li><p>NASA: Tom Clune</p></li>
+<li><p>JPL: Van Sneider</p></li>
+<li><p>LANL: Zach Jibben, Ondřej Čertík</p></li>
+<li><p>ORNL: Reuben Budiardja</p></li>
+<li><p>LBNL: Brian Friesen</p></li>
+<li><p>Sandia: Damian Rouson</p></li>
+<li><p>Lionel: Steven Lionel, Malcolm Cohen, Vipul Parekh</p></li>
+<li><p>Corbett: Bob Corbett</p></li>
+</ol>
+<p>Others:</p>
+<ol class="simple">
+<li><p>AMD: Richard Bleikamp</p></li>
+<li><p>WG23: Stephen Michell (convenor), Erhard Ploedereder (member)</p></li>
+<li><p>Structural Integrity: Brad Richardson</p></li>
+</ol>
+</div>
+<div class="section" id="proposals-discussed-at-plenary">
+<h2>Proposals Discussed at Plenary<a class="headerlink" href="#proposals-discussed-at-plenary" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="monday-2-24">
+<h3>Monday 2/24<a class="headerlink" href="#monday-2-24" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="tuesday-2-25">
+<h3>Tuesday 2/25<a class="headerlink" href="#tuesday-2-25" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/22">#22</a> : Default values of optional arguments (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-107.txt">https://j3-fortran.org/doc/year/20/20-107.txt</a>)</p></li>
+</ul>
+</div>
+<div class="section" id="wednesday-2-26">
+<h3>Wednesday 2/26<a class="headerlink" href="#wednesday-2-26" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/157">#157</a> : Rank-agnostic array element and section denotation (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-113.txt">https://j3-fortran.org/doc/year/20/20-113.txt</a>, <a class="reference external" href="https://j3-fortran.org/doc/year/20/20-115.txt">https://j3-fortran.org/doc/year/20/20-115.txt</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/158">#158</a> : TYPEOF and CLASSOF (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-114.txt">https://j3-fortran.org/doc/year/20/20-114.txt</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/1">#1</a> : Namespace for modules (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-108.txt">https://j3-fortran.org/doc/year/20/20-108.txt</a>)</p></li>
+<li><p>Interpretation: FORM TEAM and failed images (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-102r1.txt">https://j3-fortran.org/doc/year/20/20-102r1.txt</a>)</p></li>
+<li><p>Interpretation: Collective subroutines and STAT= (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-104r1.txt">https://j3-fortran.org/doc/year/20/20-104r1.txt</a>)</p></li>
+</ul>
+</div>
+<div class="section" id="thursday-2-27">
+<h3>Thursday 2/27<a class="headerlink" href="#thursday-2-27" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Interpretation: events that cause variables to become undefined (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-119.txt">https://j3-fortran.org/doc/year/20/20-119.txt</a>)</p></li>
+<li><p>Edits for SIMPLE procedures (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-116.txt">https://j3-fortran.org/doc/year/20/20-116.txt</a>)</p></li>
+<li><p>BFLOAT16 (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-118.txt">https://j3-fortran.org/doc/year/20/20-118.txt</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/146">#146</a> : Interpretation: allocatable component finalization (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-117.txt">https://j3-fortran.org/doc/year/20/20-117.txt</a>)</p></li>
+</ul>
+</div>
+<div class="section" id="friday-2-28">
+<h3>Friday 2/28<a class="headerlink" href="#friday-2-28" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/157">#157</a> : Rank-agnostic syntax (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-120.txt">https://j3-fortran.org/doc/year/20/20-120.txt</a>). Passed unanimously with minor changes.</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/156">#156</a> : Protected components (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-121.txt">https://j3-fortran.org/doc/year/20/20-121.txt</a>). Withdrawn to address conflicting interests.</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/160">#160</a> : Edits for auto-allocate characters (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-122.txt">https://j3-fortran.org/doc/year/20/20-122.txt</a>). Passed unanimously with minor changes.</p></li>
+<li><p>Edits for procedure pointer association (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-123.txt">https://j3-fortran.org/doc/year/20/20-123.txt</a>). Passed unanimously.</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/157">#157</a> : Edits for rank-agnostic bounds (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-124.txt">https://j3-fortran.org/doc/year/20/20-124.txt</a>). Withdrawn because some edits were missing and need to be added. There were concerns about fitting into the framework of generics later on.</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/157">#157</a> : Edits for rank-agnostic array element and section denotation (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-125.txt">https://j3-fortran.org/doc/year/20/20-125.txt</a>). Failed (5 v 7). Missing edits, and disagreement on types vs rank-1 integers, the options need to be explored more.</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/157">#157</a> : Edits for rank-agnostic allocation and pointer assignment (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-126.txt">https://j3-fortran.org/doc/year/20/20-126.txt</a>). Passed unanimously with minor changes.</p></li>
+<li><p>Interpretation: Public namelist and private variable (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-127.txt">https://j3-fortran.org/doc/year/20/20-127.txt</a>). Straw vote (0 yes, 8 no, 9 undecided). Passed unanimously with “no” alternative.</p></li>
+<li><p>Interpretation F18/015 (<a class="reference external" href="https://j3-fortran.org/doc/year/20/20-105.txt">https://j3-fortran.org/doc/year/20/20-105.txt</a>). Passed unanimously.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="skipped">
+<h2>Skipped<a class="headerlink" href="#skipped" title="Permalink to this headline">¶</a></h2>
+<p>This was on the plan but we did not get to it:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/5">#5</a> : US 27 POINTER dummy arguments, INTENT, and target modification (<a class="reference external" href="https://j3-fortran.org/doc/year/18/18-144r1.txt">https://j3-fortran.org/doc/year/18/18-144r1.txt</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/19">#19</a> : Short-circuiting proposal</p></li>
+</ul>
+</div>
+<div class="section" id="more-details">
+<h2>More Details<a class="headerlink" href="#more-details" title="Permalink to this headline">¶</a></h2>
+<p>More details available at
+<a class="reference external" href="https://github.com/j3-fortran/fortran_proposals/issues/155">j3-fortran/fortran_proposals #155</a> and at the official <a class="reference external" href="https://j3-fortran.org/doc/year/20/minutes221.txt">minutes</a> from the meeting.</p>
+</div>
+</div>
+
+<div class="section">
+     
+<div class="section">
+  <span style="float: left">
+    
+  </span>
+  <span>&nbsp;</span>
+  <span style="float: right">
+     Next: 
+    <a href="04-06-Announcing-FortranCon-2020.html">
+      Announcing FortranCon 2020 
+    </a>
+    
+  </span>
+</div>
+  
+</div>
+
+              </div>
+              
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright .<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
