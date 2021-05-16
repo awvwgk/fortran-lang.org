@@ -118,9 +118,11 @@ html_title = "Fortran Programming Language"
 
 html_logo = "_static/images/fortran-logo-256x256.png"
 
-html_baseurl = "http://fortran-lang.org/"
+html_baseurl = "https://awvwgk.github.io/fortran-lang.org/"
 
 html_copy_source = False
+
+master_doc = 'index'
 
 panels_add_bootstrap_css = False
 
