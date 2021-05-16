@@ -19,12 +19,14 @@ jobs:
     - name: Build page
       run: make html
 
-#    - name: Deploy documentation
-#      uses: JamesIves/github-pages-deploy-action@3.7.1
-#      if: github.event_name == 'push' && github.repository == 'awvwgk/fortran-lang.org' && github.ref == 'refs/heads/sphinx'
-#      with:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        BRANCH: deploy
-#        FOLDER: _build/html
-#        CLEAN: true
+    - run: touch _build/html/.nojekyll
+
+    - name: Deploy documentation
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      if: github.event_name == 'push' && github.repository == 'awvwgk/fortran-lang.org' && github.ref == 'refs/heads/sphinx'
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: deploy
+        FOLDER: _build/html
+        CLEAN: true
 
